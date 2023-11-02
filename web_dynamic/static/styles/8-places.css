@@ -99,3 +99,9 @@
 .user {
   margin-bottom: 1.5%;
 }
+
+.amenity-checkbox {
+    position: relative;
+    left: -10px;
+    margin-right: 10px;
+}
