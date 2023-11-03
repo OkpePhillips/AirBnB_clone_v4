@@ -7,7 +7,7 @@ $(document).ready(function () {
         const amenityName = $(this).data('name');
 
         if (this.checked) {
-            selectedAmenities.push(amenityId);
+            selectedAmenities.push(amenityName);
         } else {
             let index = selectedAmenities.indexOf(amenityId);
             if (index !== -1) {
