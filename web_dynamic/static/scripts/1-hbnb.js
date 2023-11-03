@@ -9,7 +9,7 @@ $(document).ready(function () {
         if (this.checked) {
             selectedAmenities.push(amenityName);
         } else {
-            let index = selectedAmenities.indexOf(amenityId);
+            let index = selectedAmenities.indexOf(amenityName);
             if (index !== -1) {
                 selectedAmenities.splice(index, 1);
             }
