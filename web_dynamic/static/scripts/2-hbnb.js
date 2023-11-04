@@ -1,5 +1,3 @@
-#!/usr/bin/node
-// Script to check api status and add it to page
 $(document).ready(function () {
     let selectedAmenities = [];
     $('.amenity-checkbox').change(function () {
