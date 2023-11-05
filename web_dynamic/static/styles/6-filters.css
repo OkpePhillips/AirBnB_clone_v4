@@ -49,6 +49,14 @@ button:hover {
 .amenities {
     height: 100%;
     width: 25%;
+    max-width: 200px;
+}
+
+#scroll{ 
+    width: 20px; /* Adjust the width as needed */
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
 }
 
 .popover {
