@@ -1,48 +1,83 @@
-#!/usr/bin/python3
-""" Starts a Flash Web Application """
-from models import storage
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from os import environ
-from flask import Flask, render_template
-import uuid
-app = Flask(__name__)
-# app.jinja_env.trim_blocks = True
-# app.jinja_env.lstrip_blocks = True
+$(document).ready(function () {
+  let amenityIds = {}; // This will store the Amenity IDs
 
+  $('input[type="checkbox"]').on("change", function () {
+    let amenityId = $(this).data("id");
+    let amenityName = $(this).data("name");
 
-@app.teardown_appcontext
-def close_db(error):
-    """ Remove the current SQLAlchemy Session """
-    storage.close()
+    if ($(this).is(":checked")) {
+      // If the checkbox is checked, add the Amenity ID to the dictionary
+      amenityIds[amenityId] = amenityName;
+    } else {
+      // If the checkbox is unchecked, remove the Amenity ID from the dictionary
+      delete amenityIds[amenityId];
+    }
 
+    // Update the h4 tag with the list of checked amenities
+    let amenitiesList = Object.values(amenityIds).join(", ");
+    $(".amenities h4").text(amenitiesList);
+  });
+  function checkApiStatus() {
+    $.get("http://0.0.0.0:5001/api/v1/status/", function (data) {
+      if (data.status === "OK") {
+        $("#api_status").addClass("available");
+      } else {
+        $("#api_status").removeClass("available");
+      }
+    });
+  }
+  checkApiStatus();
+  setInterval(checkApiStatus, 5000);
+  // Define the API endpoint
+  let url = "http://0.0.0.0:5001/api/v1/places_search";
 
-@app.route('/3-hbnb', strict_slashes=False)
-def hbnb():
-    """ HBNB is alive! """
-    cache_id = str(uuid.uuid4())
-    states = storage.all(State).values()
-    states = sorted(states, key=lambda k: k.name)
-    st_ct = []
+  // Define the request options
+  let options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  };
 
-    for state in states:
-        st_ct.append([state, sorted(state.cities, key=lambda k: k.name)])
+  // Send the request
+  fetch(url, options)
+    .then((response) => response.json())
+    .then((data) => {
+      // Get the places section
+      let placesSection = document.querySelector(".places");
 
-    amenities = storage.all(Amenity).values()
-    amenities = sorted(amenities, key=lambda k: k.name)
+      // Loop through the places
+      data.forEach((place) => {
+        // Create an article for the place
+        let article = document.createElement("article");
 
-    places = storage.all(Place).values()
-    places = sorted(places, key=lambda k: k.name)
+        // Add the place details to the article
+        article.innerHTML = `
+        <div class="title_box">
+          <h2>${place.name}</h2>
+          <div class="price_by_night">$${place.price_by_night}</div>
+        </div>
+        <div class="information">
+          <div class="max_guest">
+            ${place.max_guest} Guest${place.max_guest != 1 ? "s" : ""}
+          </div>
+          <div class="number_rooms">
+            ${place.number_rooms} Bedroom${place.number_rooms != 1 ? "s" : ""}
+          </div>
+          <div class="number_bathrooms">
+            ${place.number_bathrooms} Bathroom${
+          place.number_bathrooms != 1 ? "s" : ""
+        }
+          </div>
+        </div>
+        <div class="description">${place.description}</div>
+      `;
 
-    return render_template('3-hbnb.html',
-                           states=st_ct,
-                           amenities=amenities,
-                           places=places, cache_id=cache_id)
-
-
-if __name__ == "__main__":
-    """ Main Function """
-    app.run(host='0.0.0.0', port=5000)
+        // Append the article to the places section
+        placesSection.appendChild(article);
+      });
+    })
+    .catch((error) => console.error("Error:", error));
+});
 
