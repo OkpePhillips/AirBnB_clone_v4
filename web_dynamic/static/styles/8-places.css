@@ -100,8 +100,41 @@
   margin-bottom: 1.5%;
 }
 
-.amenity-checkbox {
-    position: relative;
-    left: -10px;
-    margin-right: 10px;
+.reviews {
+    margin-bottom: 5%;
+    margin-top: 5%;
+    width: 100%;
+}
+.reviews h2{
+    font-size: medium;
+    text-align: left;
+    margin-bottom: 2%;
+    margin-top: 5%;
+    width: 100%;
+}
+.cap{
+    border-bottom: 1px solid;
+}
+.reviews>ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
+}
+
+.places .reviews ul li h3 {
+    margin-top: 0;
+    padding-bottom: 0px;
+    margin-bottom: 10px;
+}
+
+.places .reviews ul li p {
+    
+    margin-top: -5px;
+}
+#top_text{
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 5px;
 }
